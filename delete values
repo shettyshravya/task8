@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form with Local Storage</title>
+</head>
+<body>
+
+  <h2>Enter Your Information</h2>
+
+  <form id="infoForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" required>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <div id="displayInfo"></div>
+
+  <script>
+    document.getElementById('infoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+      var phone = document.getElementById('phone').value;
+
+      var userInfo = {
+        name: name,
+        email: email,
+        phone: phone
+      };
+
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+      document.getElementById('name').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('phone').value = ''
+
+      displayUserInfo();
+    });
+
+    function displayUserInfo() {
+      var storedUserInfo = localStorage.getItem('userInfo');
+      var displayInfoDiv = document.getElementById('displayInfo');
+
+      if (storedUserInfo) {
+        var userInfo = JSON.parse(storedUserInfo);
+
+        displayInfoDiv.innerHTML = `
+          <h2>Stored Information:</h2>
+          <p>Name: ${userInfo.name}</p>
+          <p>Email: ${userInfo.email}</p>
+          <p>Phone Number: ${userInfo.phone}</p>
+          <button onclick="deleteUserInfo()">Delete</button>
+        `;
+      }
+      else{
+        displayInfoDiv.innerHTML = ''; 
+      }
+    }
+    function deleteUserInfo() {
+      localStorage.removeItem('userInfo');
+      displayUserInfo(); 
+    }
+    displayUserInfo();
+  </script>
+
+</body>
+</html>
